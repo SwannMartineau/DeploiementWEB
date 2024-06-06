@@ -35,6 +35,9 @@ $ npm install
 ## Running the app
 
 ```bash
+# docker Redis
+$ docker compose up -d
+
 # development
 $ npm run start
 
