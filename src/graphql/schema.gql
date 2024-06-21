@@ -19,6 +19,11 @@ type Message {
   timestamp: String!
 }
 
+type Mutation {
+  createConversation(user1Id: Int!, user2Id: Int!): Conversation!
+  sendMessage(content: String!, conversationID: Int!, fromUserID: Int!): Message!
+}
+
 type Query {
   getAllConversations: [Conversation!]!
   getAllConversationsByParticipantId(participantID: Int!): [Conversation!]!

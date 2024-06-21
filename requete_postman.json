@@ -1,0 +1,39 @@
+{
+    "getAllConversations": {
+      "query": "{ getAllConversations { conversationID messages { messageID content } participants { userID firstName lastName } } }"
+    },
+    "getAllConversationsByParticipantId": {
+      "query": "{ getAllConversationsByParticipantId(participantID: 1) { conversationID messages { messageID content } participants { userID firstName lastName } } }"
+    },
+    "getAllMessages": {
+      "query": "{ getAllMessages { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+    },
+    "getAllMessagesByConversationId": {
+      "query": "{ getAllMessagesByConversationId(conversationID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+    },
+    "getAllMessagesByUserId": {
+      "query": "{ getAllMessagesByUserId(userID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+    },
+    "getAllUsers": {
+      "query": "{ getAllUsers { userID firstName lastName } }"
+    },
+    "getConversationById": {
+      "query": "{ getConversationById(conversationID: 1) { conversationID messages { messageID content } participants { userID firstName lastName } } }"
+    },
+    "getIdentityById": {
+      "query": "{ getIdentityById(userID: 1) }"
+    },
+    "getMessageById": {
+      "query": "{ getMessageById(messageID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+    },
+    "getUserById": {
+      "query": "{ getUserById(userID: 1) { userID firstName lastName } }"
+    },
+    "createConversation": {
+      "query": "mutation { createConversation(user1Id: 1, user2Id: 2) { conversationID participants { userID firstName lastName } } }"
+    },
+    "sendMessage": {
+      "query": "mutation { sendMessage(content: \"Hello\", conversationID: 1, fromUserID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+    }
+  }
+  

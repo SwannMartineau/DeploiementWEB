@@ -2,15 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { Message } from './message.model';
 import { Conversation } from '../conversation/conversation.model';
 import { User } from '../user/user.model';
+import { ConversationService } from 'src/conversation/conversation.service';
 
 @Injectable()
 export class MessageService {
-  private users: User[] = [
+  /* private users: User[] = [
     { userID: 1, firstName: 'John', lastName: 'Doe' },
     { userID: 2, firstName: 'Jane', lastName: 'Smith' },
-  ];
+  ]; */
 
-  private conversations: Conversation[] = [
+  /* private conversations: Conversation[] = [
     {
       conversationID: 1,
       participants: [
@@ -19,10 +20,11 @@ export class MessageService {
       ],
       messages: [], // Will be updated after initialization
     },
-  ];
+  ]; */
 
+  private nextMessageId = 1;
   private messages: Message[] = [
-    {
+    /* {
       messageID: 1,
       content: 'Hello World',
       fromUser: this.users[0],
@@ -35,16 +37,16 @@ export class MessageService {
       fromUser: this.users[1],
       conversation: this.conversations[0],
       timestamp: new Date().toISOString(),
-    },
+    }, */
   ];
 
-  constructor() {
+  constructor(private readonly conversationService: ConversationService) {
     // Initialize the conversation field in messages
-    this.conversations.forEach(conversation => {
+    /* this.conversations.forEach(conversation => {
       conversation.messages = this.messages.filter(
         message => message.conversation.conversationID === conversation.conversationID,
       );
-    });
+    }); */
   }
 
   getAllMessages(): Message[] {
@@ -61,5 +63,18 @@ export class MessageService {
 
   getAllMessagesByConversationId(conversationID: number): Message[] {
     return this.messages.filter(message => message.conversation.conversationID === conversationID);
+  }
+
+  sendMessage(content: string, fromUser: User, conversation: Conversation): Message {
+    const newMessage: Message = {
+      messageID: this.nextMessageId++,
+      content,
+      fromUser,
+      conversation,
+      timestamp: new Date().toISOString(),
+    };
+    this.messages.push(newMessage);
+    conversation.messages.push(newMessage);
+    return newMessage;
   }
 }

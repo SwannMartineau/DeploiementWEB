@@ -5,8 +5,9 @@ import { Message } from '../message/message.model';
 
 @Injectable()
 export class ConversationService {
+  private nextConversationId = 1;
   private conversations: Conversation[] = [
-    {
+    /* {
       conversationID: 1,
       participants: [
         { userID: 1, firstName: 'John', lastName: 'Doe' },
@@ -28,16 +29,16 @@ export class ConversationService {
           timestamp: new Date().toISOString(),
         },
       ],
-    },
+    }, */
   ];
 
   constructor() {
     // Initialize the conversation field in messages
-    this.conversations.forEach(conversation => {
+    /* this.conversations.forEach(conversation => {
       conversation.messages.forEach(message => {
         message.conversation = conversation;
       });
-    });
+    }); */
   }
 
   getAllConversations(): Conversation[] {
@@ -52,5 +53,15 @@ export class ConversationService {
     return this.conversations.filter(conversation =>
       conversation.participants.some(participant => participant.userID === participantId),
     );
+  }
+
+  createConversation(user1: User, user2: User): Conversation {
+    const newConversation: Conversation = {
+      conversationID: this.nextConversationId++,
+      participants: [user1, user2],
+      messages: [],
+    };
+    this.conversations.push(newConversation);
+    return newConversation;
   }
 }
