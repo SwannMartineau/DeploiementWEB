@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { UserResolver } from 'src/user/user.resolver';
 import { UserModule } from 'src/user/user.module';
+import { MessageModule } from 'src/message/message.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import { UserModule } from 'src/user/user.module';
           sortSchema: true,
         }),
         UserModule,
+        MessageModule,
       ],
   providers: [UserResolver],
 })
