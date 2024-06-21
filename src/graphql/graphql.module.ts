@@ -5,6 +5,7 @@ import { join } from 'path';
 import { UserResolver } from 'src/user/user.resolver';
 import { UserModule } from 'src/user/user.module';
 import { MessageModule } from 'src/message/message.module';
+import { MessageResolver } from 'src/message/message.resolver';
 
 @Module({
     imports: [
@@ -16,6 +17,6 @@ import { MessageModule } from 'src/message/message.module';
         UserModule,
         MessageModule,
       ],
-  providers: [UserResolver],
+  providers: [UserResolver, MessageResolver],
 })
 export class GraphqlModule {}

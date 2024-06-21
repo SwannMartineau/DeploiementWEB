@@ -1,6 +1,5 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
-/* import { DateTimeScalar } from './date.scalar';
- */
+
 @ObjectType()
 export class Message {
   @Field(() => ID)
@@ -15,6 +14,6 @@ export class Message {
   @Field()
   content: string;
 
-  /* @Field(() => DateTimeScalar)
-  timestamp: Date; */
+  @Field(() => String)
+  timestamp: string;
 }

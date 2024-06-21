@@ -9,12 +9,15 @@ type Message {
   content: String!
   from_user_id: Float!
   id: ID!
+  timestamp: String!
   to_user_id: Float!
 }
 
 type Query {
-  getAllUsers: [Message!]!
-  getUserById(id: Int!): Message!
+  getAllMessages: [Message!]!
+  getAllUsers: [User!]!
+  getMessageById(id: Int!): Message!
+  getUserById(id: Int!): User!
 }
 
 type User {
