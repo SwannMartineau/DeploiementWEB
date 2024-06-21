@@ -12,7 +12,12 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  async getUserById(@Args('id', { type: () => Int }) id: number): Promise<User> {
-    return this.userService.getUserById(id);
+  async getUserById(@Args('userID', { type: () => Int }) userID: number): Promise<User> {
+    return this.userService.getUserById(userID);
+  }
+
+  @Query(() => String)
+  async getIdentityById(@Args('userID', { type: () => Int }) userID: number): Promise<string> {
+    return this.userService.getIdentityById(userID);
   }
 }

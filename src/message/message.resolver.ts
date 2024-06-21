@@ -12,7 +12,17 @@ export class MessageResolver {
   }
 
   @Query(() => Message)
-  async getMessageById(@Args('id', { type: () => Int }) id: number): Promise<Message> {
-    return this.messageService.getMessageById(id);
+  async getMessageById(@Args('messageID', { type: () => Int }) messageID: number): Promise<Message> {
+    return this.messageService.getMessageById(messageID);
+  }
+
+  @Query(() => [Message])
+  async getAllMessagesByUserId(@Args('userID', { type: () => Int }) userID: number): Promise<Message[]> {
+    return this.messageService.getAllMessagesByUserId(userID);
+  }
+
+  @Query(() => [Message])
+  async getAllMessagesByConversationId(@Args('conversationID', { type: () => Int }) conversationID: number): Promise<Message[]> {
+    return this.messageService.getAllMessagesByConversationId(conversationID);
   }
 }

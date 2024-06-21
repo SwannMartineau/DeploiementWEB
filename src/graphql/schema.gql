@@ -2,26 +2,38 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Conversation {
+  conversationID: ID!
+  messages: [Message!]!
+  participants: [User!]!
+}
+
 """DateTime custom scalar type"""
 scalar DateTime
 
 type Message {
   content: String!
-  from_user_id: Float!
-  id: ID!
+  conversation: Conversation!
+  fromUser: User!
+  messageID: ID!
   timestamp: String!
-  to_user_id: Float!
 }
 
 type Query {
+  getAllConversations: [Conversation!]!
+  getAllConversationsByParticipantId(participantID: Int!): [Conversation!]!
   getAllMessages: [Message!]!
+  getAllMessagesByConversationId(conversationID: Int!): [Message!]!
+  getAllMessagesByUserId(userID: Int!): [Message!]!
   getAllUsers: [User!]!
-  getMessageById(id: Int!): Message!
-  getUserById(id: Int!): User!
+  getConversationById(conversationID: Int!): Conversation!
+  getIdentityById(userID: Int!): String!
+  getMessageById(messageID: Int!): Message!
+  getUserById(userID: Int!): User!
 }
 
 type User {
   firstName: String!
-  id: ID!
   lastName: String!
+  userID: ID!
 }
