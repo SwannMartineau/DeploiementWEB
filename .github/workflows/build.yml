@@ -33,13 +33,9 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/my-nest-app:latest
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
+      - name: Deploy to Render
+        run: |
+          curl -X POST \
+          -H "Accept: application/json" \
+          -d "" \
+          https://api.render.com/deploy/srv-cq6jtgss1f4s73e520g0?key=mq3FqYqQdig
