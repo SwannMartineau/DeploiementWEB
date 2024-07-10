@@ -54,8 +54,10 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
+# integration tests
+$ cd back
+$ npm i -g newman
+$ newman run Test_Collection.postman_collection.json -e Test_Environment.postman_environment.json
 
 # test coverage
 $ npm run test:cov
