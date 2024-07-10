@@ -45,9 +45,7 @@ export class MessageResolver {
     @Args('fromUserID', { type: () => Int }) fromUserId: number,
     @Args('conversationID', { type: () => Int }) conversationId: number,
   ): Promise<Message> {
-    const fromUser = this.userService.getUserById(fromUserId);
-    const conversation = this.conversationService.getConversationById(conversationId);
-    await this.messageService.addMessageJob(content, fromUserId, conversationId);
-    return this.messageService.sendMessage(content, fromUser, conversation);
+    const res = await this.messageService.addMessageJob(content, fromUserId, conversationId);
+    return res.data;
   }
 }

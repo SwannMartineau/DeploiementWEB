@@ -43,8 +43,8 @@ export class MessageService {
     return newMessage;
   }
 
-  async addMessageJob(content: string, fromUserId: number, conversationId: number) {
-    await this.messageQueue.add('save-message', {
+  async addMessageJob(content: string, fromUserId: number, conversationId: number): Promise<any> {
+    return await this.messageQueue.add('save-message', {
       content,
       fromUserId,
       conversationId,
