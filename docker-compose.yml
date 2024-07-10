@@ -11,24 +11,23 @@ services:
     networks:
       - redis_network
 
-  mysql:
-    image: "mysql:8.0"
-    container_name: mysql
+  postgres:
+    image: "postgres:latest"
+    container_name: postgres
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      MYSQL_ROOT_PASSWORD: "tcheat"
-      MYSQL_DATABASE: "tcheat"
-      MYSQL_USER: "user"
-      MYSQL_PASSWORD: "tcheat"
+      POSTGRES_DB: "tcheat"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "tcheat"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - app_network
 
 volumes:
   redis_data:
-  mysql_data:
+  postgres_data:
 
 networks:
   redis_network:

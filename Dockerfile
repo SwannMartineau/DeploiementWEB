@@ -14,7 +14,7 @@ COPY ./back/package*.json ./
 RUN npm install
 
 # Copiez les fichiers de l'application
-COPY ./back/* .
+COPY ./back .
 
 # Construisez l'application NestJS
 RUN nest build
