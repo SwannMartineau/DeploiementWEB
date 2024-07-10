@@ -2,6 +2,8 @@ import { Resolver, Query, Args, Int, Mutation } from '@nestjs/graphql';
 import { ConversationService } from './conversation.service';
 import { Conversation } from './conversation.model';
 import { UserService } from '../user/user.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guards';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Conversation)
 export class ConversationResolver {
@@ -10,21 +12,25 @@ export class ConversationResolver {
     private readonly userService: UserService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => [Conversation])
   async getAllConversations(): Promise<Conversation[]> {
     return this.conversationService.getAllConversations();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => Conversation)
   async getConversationById(@Args('conversationID', { type: () => Int }) conversationID: number): Promise<Conversation> {
     return this.conversationService.getConversationById(conversationID);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => [Conversation])
   async getAllConversationsByParticipantId(@Args('participantID', { type: () => Int }) participantID: number): Promise<Conversation[]> {
     return this.conversationService.getAllConversationsByParticipantId(participantID);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Conversation)
   async createConversation(
     @Args('user1Id', { type: () => Int }) user1Id: number,

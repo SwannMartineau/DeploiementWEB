@@ -21,7 +21,9 @@ type Message {
 
 type Mutation {
   createConversation(user1Id: Int!, user2Id: Int!): Conversation!
+  login(password: String!, username: String!): SignUpResponse!
   sendMessage(content: String!, conversationID: Int!, fromUserID: Int!): Message!
+  signUP(email: String!, password: String!, username: String!): SignUpResponse!
 }
 
 type Query {
@@ -37,8 +39,14 @@ type Query {
   getUserById(userID: Int!): User!
 }
 
+type SignUpResponse {
+  token: String!
+  user: User!
+}
+
 type User {
-  firstName: String!
-  lastName: String!
+  email: String!
+  password: String!
   userID: ID!
+  username: String!
 }

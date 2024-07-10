@@ -6,8 +6,11 @@ export class User {
   userID: number;
 
   @Field()
-  firstName: string;
+  username: string;
 
   @Field()
-  lastName: string;
+  email: string;
+
+  @Field()
+  password: string;
 }

@@ -6,48 +6,10 @@ import { ConversationService } from 'src/conversation/conversation.service';
 
 @Injectable()
 export class MessageService {
-  /* private users: User[] = [
-    { userID: 1, firstName: 'John', lastName: 'Doe' },
-    { userID: 2, firstName: 'Jane', lastName: 'Smith' },
-  ]; */
-
-  /* private conversations: Conversation[] = [
-    {
-      conversationID: 1,
-      participants: [
-        { userID: 1, firstName: 'John', lastName: 'Doe' },
-        { userID: 2, firstName: 'Jane', lastName: 'Smith' },
-      ],
-      messages: [], // Will be updated after initialization
-    },
-  ]; */
-
   private nextMessageId = 1;
-  private messages: Message[] = [
-    /* {
-      messageID: 1,
-      content: 'Hello World',
-      fromUser: this.users[0],
-      conversation: this.conversations[0],
-      timestamp: new Date().toISOString(),
-    },
-    {
-      messageID: 2,
-      content: 'NestJS is great',
-      fromUser: this.users[1],
-      conversation: this.conversations[0],
-      timestamp: new Date().toISOString(),
-    }, */
-  ];
+  private messages: Message[] = [];
 
-  constructor(private readonly conversationService: ConversationService) {
-    // Initialize the conversation field in messages
-    /* this.conversations.forEach(conversation => {
-      conversation.messages = this.messages.filter(
-        message => message.conversation.conversationID === conversation.conversationID,
-      );
-    }); */
-  }
+  constructor(private readonly conversationService: ConversationService) {}
 
   getAllMessages(): Message[] {
     return this.messages;

@@ -5,9 +5,10 @@ import { HealthModule } from './health/health.module';
 import { BullQueueModule } from './bull-queue/bull-queue.module';
 import { GraphqlModule } from './graphql/graphql.module';
 import { DateTimeScalar } from './message/date.scalar';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [HealthModule, BullQueueModule, GraphqlModule],
+  imports: [HealthModule, BullQueueModule, GraphqlModule, AuthModule],
   controllers: [AppController],
   providers: [AppService, DateTimeScalar],
 })
