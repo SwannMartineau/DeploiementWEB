@@ -1,39 +1,45 @@
 {
     "getAllConversations": {
-      "query": "{ getAllConversations { conversationID messages { messageID content } participants { userID firstName lastName } } }"
+      "query": "{ getAllConversations { conversationID messages { messageID content } participants { userID username email } } }"
     },
     "getAllConversationsByParticipantId": {
-      "query": "{ getAllConversationsByParticipantId(participantID: 1) { conversationID messages { messageID content } participants { userID firstName lastName } } }"
+      "query": "{ getAllConversationsByParticipantId(participantID: 1) { conversationID messages { messageID content } participants { userID username email } } }"
     },
     "getAllMessages": {
-      "query": "{ getAllMessages { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+      "query": "{ getAllMessages { messageID content timestamp fromUser { userID username email } conversation { conversationID } } }"
     },
     "getAllMessagesByConversationId": {
-      "query": "{ getAllMessagesByConversationId(conversationID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+      "query": "{ getAllMessagesByConversationId(conversationID: 1) { messageID content timestamp fromUser { userID username email } conversation { conversationID } } }"
     },
     "getAllMessagesByUserId": {
-      "query": "{ getAllMessagesByUserId(userID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+      "query": "{ getAllMessagesByUserId(userID: 1) { messageID content timestamp fromUser { userID username email } conversation { conversationID } } }"
     },
     "getAllUsers": {
-      "query": "{ getAllUsers { userID firstName lastName } }"
+      "query": "{ getAllUsers { userID username email } }"
     },
     "getConversationById": {
-      "query": "{ getConversationById(conversationID: 1) { conversationID messages { messageID content } participants { userID firstName lastName } } }"
+      "query": "{ getConversationById(conversationID: 1) { conversationID messages { messageID content } participants { userID username email } } }"
     },
     "getIdentityById": {
       "query": "{ getIdentityById(userID: 1) }"
     },
     "getMessageById": {
-      "query": "{ getMessageById(messageID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+      "query": "{ getMessageById(messageID: 1) { messageID content timestamp fromUser { userID username email } conversation { conversationID } } }"
     },
     "getUserById": {
-      "query": "{ getUserById(userID: 1) { userID firstName lastName } }"
+      "query": "{ getUserById(userID: 1) { userID username email } }"
     },
     "createConversation": {
-      "query": "mutation { createConversation(user1Id: 1, user2Id: 2) { conversationID participants { userID firstName lastName } } }"
+      "query": "mutation { createConversation(user1Id: 1, user2Id: 2) { conversationID participants { userID username email } } }"
     },
     "sendMessage": {
-      "query": "mutation { sendMessage(content: \"Hello\", conversationID: 1, fromUserID: 1) { messageID content timestamp fromUser { userID firstName lastName } conversation { conversationID } } }"
+      "query": "mutation { sendMessage(content: \"Hello\", conversationID: 1, fromUserID: 1) { messageID content timestamp fromUser { userID username email } conversation { conversationID } } }"
+    },
+    "signUP": {
+      "query": "mutation { signUP(username:\"test\", password:\"azerty\", email:\"test@test.com\") {token user{ userID username email }} }"
+    },
+    "login": {
+      "query": "mutation { login(username:\"test\", password:\"azerty\") {token user{ userID username email }} }"
     }
   }
   
