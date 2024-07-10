@@ -15,14 +15,21 @@
   <script setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import { loginUser } from '../api/auth.js';
   
   const router = useRouter();
   const username = ref('');
   const password = ref('');
   
-  const login = () => {
-    // Simulation d'une connexion réussie
+  const login = async () => {
+    try {
+    const response = await loginUser(username.value, password.value);
+    console.log("login created:", response);
+    
     router.push({ name: 'Messaging' });
+  } catch (error) {
+    console.error("Error creating conversation:", error);
+  }
   };
   </script>
   

@@ -3,6 +3,7 @@
       <h1>Register</h1>
       <form @submit.prevent="register">
         <input type="text" placeholder="Username" v-model="username" />
+        <input type="text" placeholder="Email" v-model="email" />
         <input type="password" placeholder="Password" v-model="password" />
         <button type="submit">Register</button>
       </form>
@@ -13,14 +14,26 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
-  
+  import { ref } from 'vue';  
+  import { useRouter } from 'vue-router';
+  import { registerUser } from '../api/auth.js';  
+
+  const router = useRouter();
   const username = ref('');
+  const email = ref('');
   const password = ref('');
   
-  const register = () => {
+  const register = async () => {
     // Simulation d'une inscription réussie
     console.log('User registered:', username.value);
+    try {
+    const response = await registerUser(username.value, email.value, password.value);
+    console.log("login created:", response);
+    
+    router.push({ name: 'Messaging' });
+  } catch (error) {
+    console.error("Error creating conversation:", error);
+  }
   };
   </script>
   

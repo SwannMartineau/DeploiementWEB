@@ -8,7 +8,7 @@
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-router.push('/login'); // Redirige automatiquement vers la page de login au chargement de l'application
+router.push('/login');
 </script>
 
 <style>
