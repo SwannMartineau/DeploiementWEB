@@ -11,9 +11,27 @@ services:
     networks:
       - redis_network
 
+  mysql:
+    image: "mysql:8.0"
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "tcheat"
+      MYSQL_DATABASE: "tcheat"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "tcheat"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
 volumes:
   redis_data:
+  mysql_data:
 
 networks:
   redis_network:
+    driver: bridge
+  app_network:
     driver: bridge
