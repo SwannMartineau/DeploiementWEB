@@ -30,7 +30,7 @@ export class MessageService {
     return this.messages.filter(message => message.conversation.conversationID === conversationID);
   }
 
-  async sendMessage(content: string, fromUser: User, conversation: Conversation): Promise<Message> {
+  async sendUserMessage(content: string, fromUser: User, conversation: Conversation): Promise<Message> {
     const newMessage: Message = {
       messageID: this.nextMessageId++,
       content,
