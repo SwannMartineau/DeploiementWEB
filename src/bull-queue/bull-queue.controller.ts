@@ -1,16 +1,13 @@
-import { InjectQueue } from '@nestjs/bull';
-import { Controller, Get, Post } from '@nestjs/common';
-import { Queue } from 'bull';
+import { Controller, Get } from '@nestjs/common';
+import { BullQueueService } from './bull-queue.service';
 
 @Controller('bull-queue')
 export class BullQueueController {
-  constructor(@InjectQueue('my-queue') private readonly MyQueue: Queue) {}
+  constructor(private readonly bullQueueService: BullQueueService) {}
 
-  @Get('transcode')
-  async transcode() {
-    await this.MyQueue.add('transcode', {
-      content: 'This is a message',
-    });
+  @Get('add-job')
+  async addJob() {
+    await this.bullQueueService.addTranscodeJob('This is a message');
     return 'Job added to the queue';
   }
 }

@@ -1,15 +1,16 @@
-import { Process, Processor } from '@nestjs/bull';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
+import { Job } from 'bullmq';
 
 @Processor('my-queue')
-export class BullQueueProcessor {
+export class BullQueueProcessor extends WorkerHost {
   private readonly logger = new Logger(BullQueueProcessor.name);
 
-  @Process('transcode')
-  async handleTranscode(job: Job) {
+  async process(job: Job<any, any, string>): Promise<any> {
+    {
     this.logger.debug('Start transcoding...');
     this.logger.debug(job.data);
     this.logger.debug('Transcoding completed');
+    }
   }
 }

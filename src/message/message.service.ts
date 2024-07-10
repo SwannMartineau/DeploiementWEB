@@ -1,53 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { Message } from './message.model';
 import { Conversation } from '../conversation/conversation.model';
 import { User } from '../user/user.model';
-import { ConversationService } from 'src/conversation/conversation.service';
 
 @Injectable()
 export class MessageService {
-  /* private users: User[] = [
-    { userID: 1, firstName: 'John', lastName: 'Doe' },
-    { userID: 2, firstName: 'Jane', lastName: 'Smith' },
-  ]; */
-
-  /* private conversations: Conversation[] = [
-    {
-      conversationID: 1,
-      participants: [
-        { userID: 1, firstName: 'John', lastName: 'Doe' },
-        { userID: 2, firstName: 'Jane', lastName: 'Smith' },
-      ],
-      messages: [], // Will be updated after initialization
-    },
-  ]; */
-
   private nextMessageId = 1;
-  private messages: Message[] = [
-    /* {
-      messageID: 1,
-      content: 'Hello World',
-      fromUser: this.users[0],
-      conversation: this.conversations[0],
-      timestamp: new Date().toISOString(),
-    },
-    {
-      messageID: 2,
-      content: 'NestJS is great',
-      fromUser: this.users[1],
-      conversation: this.conversations[0],
-      timestamp: new Date().toISOString(),
-    }, */
-  ];
+  private messages: Message[] = [];
 
-  constructor(private readonly conversationService: ConversationService) {
-    // Initialize the conversation field in messages
-    /* this.conversations.forEach(conversation => {
-      conversation.messages = this.messages.filter(
-        message => message.conversation.conversationID === conversation.conversationID,
-      );
-    }); */
-  }
+  constructor(
+    @InjectQueue('message-queue') private readonly messageQueue: Queue,
+  ) {}
 
   getAllMessages(): Message[] {
     return this.messages;
@@ -65,7 +30,7 @@ export class MessageService {
     return this.messages.filter(message => message.conversation.conversationID === conversationID);
   }
 
-  sendMessage(content: string, fromUser: User, conversation: Conversation): Message {
+  async sendMessage(content: string, fromUser: User, conversation: Conversation): Promise<Message> {
     const newMessage: Message = {
       messageID: this.nextMessageId++,
       content,
@@ -76,5 +41,13 @@ export class MessageService {
     this.messages.push(newMessage);
     conversation.messages.push(newMessage);
     return newMessage;
+  }
+
+  async addMessageJob(content: string, fromUserId: number, conversationId: number) {
+    await this.messageQueue.add('save-message', {
+      content,
+      fromUserId,
+      conversationId,
+    });
   }
 }

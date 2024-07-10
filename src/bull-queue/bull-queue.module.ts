@@ -1,21 +1,23 @@
-import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
-import { BullQueueProcessor } from './bull-queue.processor';
+import { BullModule } from '@nestjs/bullmq';
 import { BullQueueController } from './bull-queue.controller';
+import { BullQueueService } from './bull-queue.service';
+import { BullQueueProcessor } from './bull-queue.processor';
+
 
 @Module({
   imports: [
     BullModule.forRoot({
-      redis: {
+      connection: {
         host: 'localhost',
         port: 6379,
       },
     }),
     BullModule.registerQueue({
-      name: 'my-queue',
+        name: 'my-queue',
     }),
   ],
   controllers: [BullQueueController],
-  providers: [BullQueueProcessor],
+  providers: [BullQueueService, BullQueueProcessor],
 })
-export class BullQueueModule {}
+export class BullMQModule {}
