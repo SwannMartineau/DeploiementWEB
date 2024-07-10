@@ -6,11 +6,8 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [
-    { userID: 1, username: 'JohnDoe', email: 'JohnDoe@mail.com', password: "azerty" },
-    { userID: 2, username: 'JaneSmith', email: 'JaneSmith@mail.com', password: "azerty" },
-  ];
-  private nextUserId = 3;
+  private users: User[] = [];
+  private nextUserId = 1;
 
   getAllUsers(): User[] {
     return this.users;
