@@ -12,6 +12,7 @@ export class UserResolver {
   @UseGuards(JwtAuthGuard)
   @Query(() => [User])
   async getAllUsers(): Promise<User[]> {
+    console.log("enter0");
     return this.userService.getAllUsers();
   }
 

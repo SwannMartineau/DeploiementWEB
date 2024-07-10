@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HealthModule } from './health/health.module';
-import { BullQueueModule } from './bull-queue/bull-queue.module';
 import { GraphqlModule } from './graphql/graphql.module';
 import { DateTimeScalar } from './message/date.scalar';
 import { AuthModule } from './auth/auth.module';
+import { BullMQModule } from './bull-queue/bull-queue.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
-  imports: [HealthModule, BullQueueModule, GraphqlModule, AuthModule],
+  imports: [HealthModule, BullMQModule, GraphqlModule, MessageModule, AuthModule],
   controllers: [AppController],
   providers: [AppService, DateTimeScalar],
 })
