@@ -16,9 +16,11 @@
   <script setup>
   import { ref } from 'vue';  
   import { useRouter } from 'vue-router';
-  import { registerUser } from '../api/auth.js';  
+  import { registerUser } from '../api/auth.js';
+  import { useAuthStore } from '../stores/authStore.js';  
 
   const router = useRouter();
+  const authStore = useAuthStore();
   const username = ref('');
   const email = ref('');
   const password = ref('');
@@ -28,8 +30,9 @@
     console.log('User registered:', username.value);
     try {
     const response = await registerUser(username.value, email.value, password.value);
+    authStore.setUser(response.data.signUP.user);
+    authStore.setToken(response.data.signUP.token);
     console.log("login created:", response);
-    
     router.push({ name: 'Messaging' });
   } catch (error) {
     console.error("Error creating conversation:", error);

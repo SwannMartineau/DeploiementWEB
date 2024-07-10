@@ -1,19 +1,25 @@
 <template>
   <div class="messaging">
+    <div class="header">
+      <button class="btn" @click="goToProfile">
+        Profile
+      </button>
+    </div>
+
     <div class="conversation-list">
       <h2>Conversations</h2>
       <button class="btn btn-primary mb-3" @click="openCreateModal">Créer une conversation</button>
       <ul>
-        <li v-for="conversation in filteredParticipants" :key="conversation.userID"  @click="selectConversation(conversation)" :class="{ active: selectedConversation && selectedConversation.conversationID === conversation.conversationID }">
-          {{ conversation.participants[0].firstName }} {{ conversation.participants[0].lastName }}
+        <li v-for="conversation in filteredParticipants" :key="conversation.userID" @click="selectConversation(conversation)" :class="{ active: selectedConversation && selectedConversation.conversationID === conversation.conversationID }">
+          {{ conversation.participants[0].username }}
         </li>
       </ul>
     </div>
 
     <div class="conversation-messages" v-if="selectedConversation">
-      <h2>Conversation ID: {{ selectedConversation.conversationID }}</h2>
+      <h2>{{ selectedConversation.participants[0].username }}</h2>
       <ul>
-        <li v-for="message in selectedConversation.messages" :key="message.messageID">
+        <li v-for="message in selectedConversation.messages" :key="message.messageID" :class="{'message-sent': message.fromUser.userID === user.userID, 'message-received': message.fromUser.userID !== user.userID}">
           {{ message.content }}
         </li>
       </ul>
@@ -32,14 +38,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Créer une nouvelle conversation</h5>
-            <button type="button" class="btn-close" @click="closeCreateModal"></button>
+            <button type="button" class="btn-close" @click="closeCreateModal">close</button>
           </div>
           <div class="modal-body">
             <form @submit.prevent="createConversationWithNewUser">
               <div class="mb-3">
                 <label for="selectUser" class="form-label">Sélectionner un utilisateur</label>
                 <select id="selectUser" v-model="selectedUserId" class="form-select">
-                  <option v-for="user in users" :key="user.userID" :value="user.userID">{{ user.firstName }} {{ user.lastName }}</option>
+                  <option v-for="user in users" :key="user.userID" :value="user.userID">{{ user.username }}</option>
                 </select>
               </div>
               <button type="submit" class="btn btn-primary">Créer</button>
@@ -54,6 +60,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { getAllUsers } from '../api/user.js';
+import { useAuthStore } from '../stores/authStore';
 import { 
   createConversation, 
   getAllConversationsByParticipantId,
@@ -62,13 +69,18 @@ import {
   getAllMessagesByConversationId, 
   sendMessage 
 } from '../api/message.js';
+import { useRouter } from 'vue-router';
 
 const conversations = ref([]);
+const authStore = useAuthStore();
+const user = authStore.getUser;
 const users = ref([]);
 const selectedUserId = ref(null);
 const showCreateModal = ref(false);
 const selectedConversation = ref(null);
 const newMessageContent = ref('');
+
+const router = useRouter();
 
 // Méthode pour récupérer tous les utilisateurs
 const fetchUsers = async () => {
@@ -83,8 +95,7 @@ const fetchUsers = async () => {
 // Méthode pour créer une conversation
 const createConversationWithNewUser = async () => {
   try {
-    const response = await createConversation(1, selectedUserId.value);
-    console.log("Conversation created:", response);
+    await createConversation(user.userID, selectedUserId.value);
     fetchConversations();
     closeCreateModal();
   } catch (error) {
@@ -95,7 +106,7 @@ const createConversationWithNewUser = async () => {
 // Méthode pour récupérer toutes les conversations
 const fetchConversations = async () => {
   try {
-    const response = await getAllConversationsByParticipantId(1); // Remplacez par l'ID de l'utilisateur connecté
+    const response = await getAllConversationsByParticipantId(user.userID);
     conversations.value = response.data.getAllConversationsByParticipantId;
 
     // Sélectionner la première conversation par défaut si la liste n'est pas vide
@@ -123,19 +134,17 @@ const selectConversation = async (conversation) => {
 // Méthode pour envoyer un nouveau message
 const sendMessageToConversation = async () => {
   try {
-    const response = await sendMessage(newMessageContent.value, selectedConversation.value.conversationID, 1);
-    console.log("Message sent:", response);
-    // Actualiser les messages après l'envoi
+    await sendMessage(newMessageContent.value, selectedConversation.value.conversationID, user.userID);
     selectConversation(selectedConversation.value);
-    newMessageContent.value = ''; // Effacer le champ de texte après l'envoi
+    newMessageContent.value = '';
   } catch (error) {
     console.error("Error sending message:", error);
   }
 };
 
 // Ouvrir la modal de création de conversation
-const openCreateModal = () => {
-  fetchUsers();
+const openCreateModal = async () => {
+  await fetchUsers();
   showCreateModal.value = true;
 };
 
@@ -147,7 +156,7 @@ const closeCreateModal = () => {
 // Calcul de la liste filtrée des participants pour affichage
 const filteredParticipants = computed(() => {
   return conversations.value.map(conversation => {
-    const filteredParticipants = conversation.participants.filter(participant => participant.userID !== "1");
+    const filteredParticipants = conversation.participants.filter(participant => participant.userID !== user.userID);
     if (filteredParticipants.length === 1) {
       return {
         ...conversation,
@@ -161,7 +170,12 @@ const filteredParticipants = computed(() => {
     }
   }).filter(conversation => conversation.participants.length > 0);
 });
-  
+
+// Méthode pour rediriger vers la page de profil
+const goToProfile = () => {
+  router.push('/profile');
+};
+
 onMounted(fetchConversations);
 </script>
 
@@ -171,6 +185,25 @@ onMounted(fetchConversations);
   margin: 0 auto;
   padding: 1rem;
   display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.profile-btn i {
+  color: #42b983;
 }
 
 .conversation-list {
@@ -209,12 +242,29 @@ li {
   cursor: pointer;
 }
 
+.message-sent {
+  background-color: #42b983;
+  color: white;
+  text-align: right;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+}
+
+.message-received {
+  background-color: #f0f0f0;
+  color: black;
+  text-align: left;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+}
+
 form {
   margin-top: 1rem;
 }
 
 .modal {
-  display: none;
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;

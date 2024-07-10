@@ -16,8 +16,10 @@
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { loginUser } from '../api/auth.js';
+  import { useAuthStore } from '../stores/authStore.js';
   
   const router = useRouter();
+  const authStore = useAuthStore();
   const username = ref('');
   const password = ref('');
   
@@ -25,6 +27,8 @@
     try {
     const response = await loginUser(username.value, password.value);
     console.log("login created:", response);
+    authStore.setUser(response.data.login.user);
+    authStore.setToken(response.data.login.token);
     
     router.push({ name: 'Messaging' });
   } catch (error) {
