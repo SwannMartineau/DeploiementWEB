@@ -24,7 +24,7 @@ export class MessageProcessor extends WorkerHost {
     const conversation = await this.conversationService.getConversationById(conversationId);
 
     if (fromUser && conversation) {
-      await this.messageService.sendUserMessage(content, fromUser, conversation);
+      await this.messageService.sendMessage(content, fromUser, conversation);
       this.logger.debug('Message saved successfully');
     } else {
       this.logger.error('User or conversation not found');

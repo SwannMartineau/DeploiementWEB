@@ -41,6 +41,6 @@ export class MessageResolver {
     const fromUser = this.userService.getUserById(fromUserId);
     const conversation = this.conversationService.getConversationById(conversationId);
     await this.messageService.addMessageJob(content, fromUserId, conversationId);
-    return this.messageService.sendUserMessage(content, fromUser, conversation);
+    return this.messageService.sendMessage(content, fromUser, conversation);
   }
 }
