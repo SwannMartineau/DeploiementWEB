@@ -1,7 +1,7 @@
 # Dockerfile for Vue.js frontend
 
 # Stage 1: Build
-FROM node:20 as build-stage
+FROM node:20 AS build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
