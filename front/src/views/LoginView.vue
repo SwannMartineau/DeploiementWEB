@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-      <img class="connexion" src="../../../front/public/titreTransparent.png" alt="Logo Tcheat" />
+      <img class="connexion" src="../../public/titreTransparent.png" alt="Logo Tcheat" />
 
       <h1>C O N N E X I O N</h1>
       <form @submit.prevent="login">
