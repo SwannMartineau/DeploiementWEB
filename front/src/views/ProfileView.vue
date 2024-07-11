@@ -2,7 +2,7 @@
   
     <div class="card profile">
       <div class="header">
-        <img class="logoHeader" src="../../../front_bastien/public/titreTransparent.png" alt="Logo Tcheat" />
+        <img class="logoHeader" src="../../../front/public/titreTransparent.png" alt="Logo Tcheat" />
 
       <button class="btn" @click="goToMessage">
         Messages
