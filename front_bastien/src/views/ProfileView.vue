@@ -1,5 +1,13 @@
 <template>
-    <div class="profile">
+  
+    <div class="card profile">
+      <div class="header">
+        <img class="logoHeader" src="../../../front_bastien/public/titreTransparent.png" alt="Logo Tcheat" />
+
+      <button class="btn" @click="goToMessage">
+        Messages
+      </button>
+    </div>
       <h1>Profil</h1>
       <div v-if="user">
         <p><strong>ID:</strong> {{ user.userID }}</p>
@@ -22,24 +30,9 @@
     authStore.clearAuth();
     router.push('/login');
   };
+
+  // Méthode pour rediriger vers la page de profil
+  const goToMessage = () => {
+    router.push('/messaging');
+  };
   </script>
-  
-  <style scoped>
-  .profile {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 1rem;
-    text-align: center;
-  }
-  h1 {
-    color: #42b983;
-    margin-bottom: 1rem;
-  }
-  p {
-    margin: 0.5rem 0;
-  }
-  button {
-    margin-top: 1rem;
-  }
-  </style>
-  

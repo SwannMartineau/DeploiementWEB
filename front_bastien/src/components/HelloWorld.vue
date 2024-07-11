@@ -26,9 +26,9 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<!-- <style scoped>
 h1 {
-  color: #42b983;
+  color: #b98eda;
 }
 ul {
   list-style-type: none;
@@ -37,4 +37,4 @@ ul {
 li {
   margin: 0.5rem 0;
 }
-</style>
+</style> -->

@@ -1,13 +1,17 @@
 <template>
-  <div class="messaging">
+  <div class="card messaging">
     <div class="header">
+
+      
+      <img class="logoHeader" src="../../../front_bastien/public/titreTransparent.png" alt="Logo Tcheat" />
+
       <button class="btn" @click="goToProfile">
-        Profile
+        Profil
       </button>
     </div>
-
-    <div class="conversation-list">
-      <h2>Conversations</h2>
+    <div class="blocs">
+      <div class="conversation-list">
+      <h3>Mes conversations</h3>
       <button class="btn btn-primary mb-3" @click="openCreateModal">Créer une conversation</button>
       <ul>
         <li v-for="conversation in filteredParticipants" :key="conversation.userID" @click="selectConversation(conversation)" :class="{ active: selectedConversation && selectedConversation.conversationID === conversation.conversationID }">
@@ -16,34 +20,40 @@
       </ul>
     </div>
 
-    <div class="conversation-messages" v-if="selectedConversation">
+    <div class="conversation-messages container-Mess" v-if="selectedConversation">
       <h2>{{ selectedConversation.participants[0].username }}</h2>
-      <ul>
-        <li v-for="message in selectedConversation.messages" :key="message.messageID" :class="{'message-sent': message.fromUser.userID === user.userID, 'message-received': message.fromUser.userID !== user.userID}">
+      <div class="blocMessages">
+        
+        <div v-for="message in selectedConversation.messages" :key="message.messageID" :class="{'message-sent': message.fromUser.userID === user.userID, 'message-received': message.fromUser.userID !== user.userID}">
           {{ message.content }}
-        </li>
-      </ul>
-      <form @submit.prevent="sendMessageToConversation">
+          
+        </div>
+      </div>
+      <form class="blocSend bottom-div" @submit.prevent="sendMessageToConversation">
         <div class="mb-3">
-          <label for="messageContent" class="form-label">Nouveau message</label>
+          <label for="messageContent" class="form-label">Nouveau message</label> <br/>
           <textarea id="messageContent" v-model="newMessageContent" class="form-control"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Envoyer</button>
       </form>
     </div>
 
+    </div>
+    
     <!-- Modal pour créer une nouvelle conversation -->
     <div class="modal" tabindex="-1" role="dialog" v-if="showCreateModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
+          <div class="header">
+            <button type="button" class="btn-close" @click="closeCreateModal">Fermer</button>
+          </div>
           <div class="modal-header">
-            <h5 class="modal-title">Créer une nouvelle conversation</h5>
-            <button type="button" class="btn-close" @click="closeCreateModal">close</button>
+            <h2 class="modal-title">Créer une nouvelle conversation</h2>
           </div>
           <div class="modal-body">
             <form @submit.prevent="createConversationWithNewUser">
               <div class="mb-3">
-                <label for="selectUser" class="form-label">Sélectionner un utilisateur</label>
+                <label for="selectUser" class="form-label">Sélectionner un utilisateur</label> <br/>
                 <select id="selectUser" v-model="selectedUserId" class="form-select">
                   <option v-for="user in users" :key="user.userID" :value="user.userID">{{ user.username }}</option>
                 </select>
@@ -81,6 +91,8 @@ const selectedConversation = ref(null);
 const newMessageContent = ref('');
 
 const router = useRouter();
+
+
 
 // Méthode pour récupérer tous les utilisateurs
 const fetchUsers = async () => {
@@ -178,130 +190,3 @@ const goToProfile = () => {
 
 onMounted(fetchConversations);
 </script>
-
-<style scoped>
-.messaging {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.profile-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-}
-
-.profile-btn i {
-  color: #42b983;
-}
-
-.conversation-list {
-  width: 30%;
-  max-height: 500px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 1rem;
-  margin-right: 1rem;
-}
-
-.conversation-messages {
-  flex: 1;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 1rem;
-}
-
-h2 {
-  color: #42b983;
-  font-size: 1.5rem;
-  margin-top: 0;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.message-sent {
-  background-color: #42b983;
-  color: white;
-  text-align: right;
-  padding: 10px;
-  border-radius: 10px;
-  margin: 5px 0;
-}
-
-.message-received {
-  background-color: #f0f0f0;
-  color: black;
-  text-align: left;
-  padding: 10px;
-  border-radius: 10px;
-  margin: 5px 0;
-}
-
-form {
-  margin-top: 1rem;
-}
-
-.modal {
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  z-index: 999;
-}
-
-.modal-dialog {
-  margin: 10% auto;
-  width: 50%;
-  max-width: 600px;
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border: 1px solid #888;
-  border-radius: 5px;
-}
-
-.active {
-  background-color: #f0f0f0;
-}
-
-.btn-primary {
-  background-color: #42b983;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.btn-primary:hover {
-  background-color: #2ca674;
-}
-</style>
