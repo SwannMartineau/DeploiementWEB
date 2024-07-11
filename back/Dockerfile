@@ -8,13 +8,13 @@ WORKDIR /app
 RUN npm install -g @nestjs/cli
 
 # Copiez le fichier package.json et package-lock.json
-COPY ./back/package*.json ./
+COPY ./package*.json ./
 
 # Installez les dépendances de l'application
 RUN npm install
 
 # Copiez les fichiers de l'application
-COPY ./back .
+COPY . .
 
 # Construisez l'application NestJS
 RUN nest build
