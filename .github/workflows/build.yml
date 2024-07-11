@@ -67,3 +67,11 @@ jobs:
           context: ./front
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/my-vue-app:latest
+
+      - name: Deploy to Render
+        if: success()
+        run: |
+          curl -X POST \
+          -H "Accept: application/json" \
+          -d "" \
+          https://api.render.com/deploy/srv-cq7o4rrv2p9s73c7jdfg?key=fFXyuOEVK20
