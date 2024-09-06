@@ -43,4 +43,10 @@ export class UserResolver {
   ): Promise<SignUpResponse> {
     return this.userService.login(username, password);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => String)
+  async logout(@Args('userID', { type: () => Int }) userID: number): Promise<string> {
+    return this.userService.logout(userID);
+  }
 }

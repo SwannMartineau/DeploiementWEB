@@ -4,6 +4,7 @@
 
 type Conversation {
   conversationID: ID!
+  isGlobal: Boolean!
   messages: [Message!]!
   participants: [User!]!
 }
@@ -23,6 +24,7 @@ type Mutation {
   createConversation(user1Id: Int!, user2Id: Int!): Conversation!
   deleteConversationById(conversationID: Int!): Boolean!
   login(password: String!, username: String!): SignUpResponse!
+  logout(userID: Int!): String!
   sendMessage(content: String!, conversationID: Int!, fromUserID: Int!): Message!
   signUP(email: String!, password: String!, username: String!): SignUpResponse!
 }
@@ -47,6 +49,7 @@ type SignUpResponse {
 
 type User {
   email: String!
+  isConnected: Boolean!
   socketID: String
   userID: ID!
   username: String!

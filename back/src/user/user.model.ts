@@ -23,4 +23,8 @@ export class User {
   @Field({ nullable: true }) // Optionnel dans GraphQL, pour permettre la valeur nulle
   @Column({ nullable: true }) // Permet de stocker une valeur nulle dans la base de données
   socketID?: string; // Le point d'interrogation signifie que ce champ est optionnel
+
+  @Field(() => Boolean) // Expose `isConnected` comme un champ de type bool pour GraphQL
+  @Column({ type: 'boolean', default: false }) // Colonne TypeORM de type booléen, valeur par défaut à `false`
+  isConnected: boolean;
 }

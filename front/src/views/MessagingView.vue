@@ -113,6 +113,14 @@ socket.on('sendNewMessageNotification', (newMessage) => {
   }
 });
 
+socket.on('sendUserConnect', (ConnectedUser) => {
+  console.log(ConnectedUser);
+});
+
+socket.on('sendUserDisconnect', (DisconnectedUser) => {
+  console.log(DisconnectedUser);
+});
+
 // Méthode pour récupérer les utilisateurs
 const fetchUsers = async () => {
   try {

@@ -45,7 +45,22 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   sendNewMessageNotification(message: Message) {
     const conversation = message.conversation;
     const sender = message.fromUser;
-    const dest = conversation.participants.find(x => x.userID != sender.userID);
-    this.server.to(dest.socketID).emit('sendNewMessageNotification', message);
+    //const dest = conversation.participants.find(x => x.userID != sender.userID);
+
+    conversation.participants.forEach(user => {
+      console.log(user);
+      if (user.userID != sender.userID) {
+        this.server.to(user.socketID).emit('sendNewMessageNotification', message);
+      }
+    });
+    //this.server.to(dest.socketID).emit('sendNewMessageNotification', message);
+  }
+
+  sendUserConnect(ConnectedUser: User) {
+    this.server.emit('sendUserConnect', ConnectedUser);
+  }
+
+  sendUserDisconnect(DisconnectedUser: User) {
+    this.server.emit('sendUserDisconnect', DisconnectedUser);
   }
 }

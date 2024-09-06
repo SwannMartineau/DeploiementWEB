@@ -29,9 +29,18 @@ export class ConversationService {
   async getAllConversationsByParticipantId(participantId: number): Promise<Conversation[]> {
     return this.conversationRepository
       .createQueryBuilder('conversation')
-      .leftJoinAndSelect('conversation.participants', 'participant')
-      .where('participant.userID = :participantId', { participantId })
-      .leftJoinAndSelect('conversation.messages', 'messages')
+      .leftJoinAndSelect('conversation.participants', 'participant') // Récupère tous les participants de la conversation
+      .leftJoinAndSelect('conversation.messages', 'messages') // Récupère les messages associés
+      .where(qb => {
+        const subQuery = qb.subQuery()
+          .select('conversation.conversationID')
+          .from('conversation', 'conversation')
+          .leftJoin('conversation.participants', 'p')
+          .where('p.userID = :participantId')
+          .getQuery();
+        return 'conversation.conversationID IN ' + subQuery;
+      })
+      .setParameter('participantId', participantId)
       .getMany();
   }
 

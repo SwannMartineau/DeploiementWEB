@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, Column } from 'typeorm';
 import { User } from '../user/user.model';
 import { Message } from '../message/message.model';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
@@ -18,4 +18,8 @@ export class Conversation {
   @Field(() => [Message]) // Expose `messages` comme un champ GraphQL de type liste de `Message`
   @OneToMany(() => Message, message => message.conversation) // Relation OneToMany entre `Conversation` et `Message`
   messages: Message[];
+
+  @Field(() => Boolean) // Expose `isGlobal` comme un champ de type bool pour GraphQL
+  @Column({ type: 'boolean', default: false }) // Colonne TypeORM de type booléen, valeur par défaut à `false`
+  isGlobal: boolean;
 }
