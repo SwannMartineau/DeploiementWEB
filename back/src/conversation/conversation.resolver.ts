@@ -38,6 +38,13 @@ export class ConversationResolver {
   ): Promise<Conversation> {
     const user1 = this.userService.getUserById(user1Id);
     const user2 = this.userService.getUserById(user2Id);
-    return this.conversationService.createConversation(user1, user2);
+    return this.conversationService.createConversation(await user1, await user2);
+  }
+
+  @Mutation(() => Boolean) // Indique que cette mutation retourne un booléen
+  async deleteConversationById(
+    @Args('conversationID', { type: () => Int }) conversationID: number,
+  ): Promise<boolean> {
+    return this.conversationService.deleteConversationById(conversationID);
   }
 }

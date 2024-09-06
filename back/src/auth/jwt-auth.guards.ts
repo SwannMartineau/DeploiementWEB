@@ -21,7 +21,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const userId = jwt.verify(token, process.env.JWT_SECRET) as { userID: number };
       const user = await this.usersService.getUserById(userId.userID);
       if (user) {
-        console.log(`User found: ${user.username} (${user.userID})`);
         request.user = user;
         return true;
       } else {

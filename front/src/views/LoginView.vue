@@ -19,6 +19,8 @@
   import { useRouter } from 'vue-router';
   import { loginUser } from '../api/auth.js';
   import { useAuthStore } from '../stores/authStore.js';
+  import socket from '../socket.js'; // Importer Socket.IO
+
   
   const router = useRouter();
   const authStore = useAuthStore();
@@ -28,10 +30,12 @@
   const login = async () => {
     try {
     const response = await loginUser(username.value, password.value);
-    console.log("login created:", response);
+    const user = response.data.login.user;
     authStore.setUser(response.data.login.user);
     authStore.setToken(response.data.login.token);
     
+    socket.emit('setSocketId', user.userID);
+
     router.push({ name: 'Messaging' });
   } catch (error) {
     console.error("Error creating conversation:", error);

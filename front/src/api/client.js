@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/authStore';
 
 const client = axios.create({
-  baseURL: 'https://my-nest-app-latest.onrender.com/graphql',
+  baseURL: 'http://localhost:8080/graphql',
   headers: {
     'Content-Type': 'application/json',
   },

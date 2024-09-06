@@ -45,7 +45,24 @@ export class MessageResolver {
     @Args('fromUserID', { type: () => Int }) fromUserId: number,
     @Args('conversationID', { type: () => Int }) conversationId: number,
   ): Promise<Message> {
-    const res = await this.messageService.addMessageJob(content, fromUserId, conversationId);
-    return res.data;
+    // Récupération de l'utilisateur depuis la base de données
+    const fromUser = await this.userService.getUserById(fromUserId);
+    if (!fromUser) {
+      throw new Error('User not found');
+    }
+
+    // Récupération de la conversation depuis la base de données
+    const conversation = await this.conversationService.getConversationById(conversationId);
+    if (!conversation) {
+      throw new Error('Conversation not found');
+    }
+
+    // Envoie du message via le service, après vérification des entités
+    const newMessage = await this.messageService.sendMessage(content, fromUser, conversation);
+    
+    // Optionnel : Ajouter le message à une queue pour un traitement asynchrone
+    //await this.messageService.addMessageJob(content, fromUserId, conversationId);
+
+    return newMessage;
   }
 }

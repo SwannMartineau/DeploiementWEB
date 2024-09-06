@@ -1,21 +1,29 @@
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Conversation } from '../conversation/conversation.model';
 import { User } from '../user/user.model';
+import { Conversation } from '../conversation/conversation.model';
 
-@ObjectType()
+@ObjectType() // Décorateur GraphQL
+@Entity() // Décorateur TypeORM
 export class Message {
-  @Field(() => ID)
+  @Field(() => ID) // GraphQL type
+  @PrimaryGeneratedColumn() // TypeORM primary key
   messageID: number;
 
-  @Field()
+  @Field() // GraphQL field
+  @Column() // TypeORM column
   content: string;
 
-  @Field(() => User)
+  @Field(() => User) // GraphQL relation field
+  @ManyToOne(() => User, user => user.userID)
   fromUser: User;
 
-  @Field(() => Conversation)
+  @Field(() => Conversation) // GraphQL relation field
+  @ManyToOne(() => Conversation, conversation => conversation.messages) // TypeORM relation
+  @JoinColumn({ name: 'conversationID' }) // TypeORM join column
   conversation: Conversation;
 
-  @Field()
+  @Field() // GraphQL field
+  @Column() // TypeORM column
   timestamp: string;
 }

@@ -18,7 +18,6 @@ const allUsers = ref([]);
 onMounted(async () => {
   try {
     const response = await getAllUsers();
-    console.log("response", response)
     allUsers.value = response.data.getAllUsers;
   } catch (error) {
     console.error("Error fetching users:", error);
