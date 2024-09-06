@@ -1,77 +1,77 @@
-name: Build and Push Docker Image
+# name: Build and Push Docker Image
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+# on:
+#   push:
+#     branches: [ "master" ]
+#   pull_request:
+#     branches: [ "master" ]
 
-jobs:
-  build_backend:
-    runs-on: ubuntu-latest
+# jobs:
+#   build_backend:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v1
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+#       - name: Login to DockerHub
+#         uses: docker/login-action@v1
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v1
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./back
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/my-nest-app:latest
+#       - name: Build and push Docker image
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: ./back
+#           push: true
+#           tags: ${{ secrets.DOCKER_USERNAME }}/my-nest-app:latest
 
-      - name: Deploy to Render
-        if: success()
-        run: |
-          curl -X POST \
-          -H "Accept: application/json" \
-          -d "" \
-          https://api.render.com/deploy/srv-cq6jtgss1f4s73e520g0?key=mq3FqYqQdig
+#       - name: Deploy to Render
+#         if: success()
+#         run: |
+#           curl -X POST \
+#           -H "Accept: application/json" \
+#           -d "" \
+#           https://api.render.com/deploy/srv-cq6jtgss1f4s73e520g0?key=mq3FqYqQdig
 
-  build_frontend:
-    runs-on: ubuntu-latest
-    needs: build_backend
+#   build_frontend:
+#     runs-on: ubuntu-latest
+#     needs: build_backend
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v1
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+#       - name: Login to DockerHub
+#         uses: docker/login-action@v1
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v1
 
-      - name: Build and push Docker image for frontend
-        uses: docker/build-push-action@v2
-        with:
-          context: ./front
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/my-vue-app:latest
+#       - name: Build and push Docker image for frontend
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: ./front
+#           push: true
+#           tags: ${{ secrets.DOCKER_USERNAME }}/my-vue-app:latest
 
-      - name: Deploy to Render
-        if: success()
-        run: |
-          curl -X POST \
-          -H "Accept: application/json" \
-          -d "" \
-          https://api.render.com/deploy/srv-cq7o4rrv2p9s73c7jdfg?key=fFXyuOEVK20
+#       - name: Deploy to Render
+#         if: success()
+#         run: |
+#           curl -X POST \
+#           -H "Accept: application/json" \
+#           -d "" \
+#           https://api.render.com/deploy/srv-cq7o4rrv2p9s73c7jdfg?key=fFXyuOEVK20
