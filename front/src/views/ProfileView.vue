@@ -21,12 +21,14 @@
   <script setup>
   import { useRouter } from 'vue-router';
   import { useAuthStore } from '@/stores/authStore';
+  import { logoutUser } from '../api/auth.js';
   
   const authStore = useAuthStore();
   const user = authStore.getUser;
   const router = useRouter();
   
-  const logout = () => {
+  const logout = async () => {
+    await logoutUser(user.userID)
     authStore.clearAuth();
     router.push('/login');
   };

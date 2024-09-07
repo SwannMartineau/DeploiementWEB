@@ -8,15 +8,17 @@
     <div class="blocs">
       <!-- Liste des conversations -->
       <div class="conversation-list">
-        <h3>Mes conversations</h3>
         <button class="btn btn-primary mb-3" @click="openCreateModal">Créer une conversation</button>
+        <h3>Mes conversations</h3>
         <ul>
           <li 
-            v-for="conversation in filteredParticipants" 
+            v-for="(conversation, index) in filteredParticipants" 
             :key="conversation.conversationID" 
             @click="selectConversation(conversation)" 
             :class="{ active: selectedConversation && selectedConversation.conversationID === conversation.conversationID }">
-            {{ conversation.participants[0].username }}
+            <div v-if="index==0">Global</div>
+            <div v-else>{{ conversation.participants[0].username }}</div>
+            
           </li>
         </ul>
       </div>
@@ -24,7 +26,7 @@
       <!-- Messages de la conversation sélectionnée -->
       <div class="conversation-messages container-Mess" v-if="selectedConversation">
         <h2>{{ selectedConversation.participants[0].username }}</h2>
-        <div class="blocMessages">
+        <div class="blocMessages" ref="messageContainer">
           <div 
             v-for="message in selectedConversation.messages" 
             :key="message.messageID" 
@@ -36,7 +38,12 @@
         <form class="blocSend bottom-div" @submit.prevent="sendMessageToConversation">
           <div class="mb-3">
             <label for="messageContent" class="form-label">Nouveau message</label> <br/>
-            <textarea id="messageContent" v-model="newMessageContent" class="form-control"></textarea>
+            <textarea 
+            id="messageContent" 
+            v-model="newMessageContent" 
+            class="form-control" 
+            @keydown.enter="sendMessageToConversation">
+          </textarea>
           </div>
           <button type="submit" class="btn btn-primary">Envoyer</button>
         </form>
@@ -71,7 +78,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import socket from '../socket.js'; // Importer le socket
 import { useAuthStore } from '../stores/authStore';
@@ -96,15 +103,14 @@ const showCreateModal = ref(false);
 const authStore = useAuthStore();
 const user = authStore.getUser;
 const router = useRouter();
+const messageContainer = ref(null);
 
-// Ecoute des événements Socket.IO
 socket.on('reconnect', () => {
   if (user) {
     socket.emit('setSocketId', user.userID);
   }
 });
 
-// Ecoute de l'événement "sendNewMessageNotification"
 socket.on('sendNewMessageNotification', (newMessage) => {
   if (selectedConversation.value && newMessage.conversationID === selectedConversation.value.conversationID) {
     selectedConversation.value.messages.push(newMessage);
@@ -121,7 +127,6 @@ socket.on('sendUserDisconnect', (DisconnectedUser) => {
   console.log(DisconnectedUser);
 });
 
-// Méthode pour récupérer les utilisateurs
 const fetchUsers = async () => {
   try {
     const response = await getAllUsers();
@@ -131,13 +136,11 @@ const fetchUsers = async () => {
   }
 };
 
-// Méthode pour récupérer toutes les conversations
 const fetchConversations = async () => {
   try {
     const response = await getAllConversationsByParticipantId(user.userID);
     conversations.value = response.data.getAllConversationsByParticipantId;
 
-    // Sélectionner la première conversation par défaut si elle existe
     if (conversations.value.length > 0) {
       selectConversation(conversations.value[0]);
     }
@@ -146,7 +149,6 @@ const fetchConversations = async () => {
   }
 };
 
-// Méthode pour créer une nouvelle conversation
 const createConversationWithNewUser = async () => {
   try {
     await createConversation(user.userID, selectedUserId.value);
@@ -157,7 +159,6 @@ const createConversationWithNewUser = async () => {
   }
 };
 
-// Méthode pour sélectionner une conversation et charger ses messages
 const selectConversation = async (conversation) => {
   try {
     const response = await getAllMessagesByConversationId(conversation.conversationID);
@@ -170,30 +171,37 @@ const selectConversation = async (conversation) => {
   }
 };
 
-// Méthode pour envoyer un message
 const sendMessageToConversation = async () => {
   try {
     await sendMessage(newMessageContent.value, selectedConversation.value.conversationID, user.userID);
     newMessageContent.value = '';
-    // Recharger les messages après envoi
     selectConversation(selectedConversation.value);
+    scrollToBottom();
   } catch (error) {
     console.error("Error sending message:", error);
   }
 };
 
-// Ouvrir la modal de création de conversation
+const scrollToBottom = () => {
+      const container = messageContainer.value;
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    };
+
+    onUpdated(() => {
+      scrollToBottom();
+    });
+
 const openCreateModal = async () => {
   await fetchUsers();
   showCreateModal.value = true;
 };
 
-// Fermer la modal de création de conversation
 const closeCreateModal = () => {
   showCreateModal.value = false;
 };
 
-// Liste des participants filtrés (sauf l'utilisateur actuel)
 const filteredParticipants = computed(() => {
   return conversations.value.map(conversation => {
     const participants = conversation.participants.filter(participant => participant.userID !== user.userID);
@@ -201,22 +209,16 @@ const filteredParticipants = computed(() => {
   }).filter(conversation => conversation.participants.length > 0);
 });
 
-// Redirection vers le profil
 const goToProfile = () => {
   router.push('/profile');
 };
 
-// Monter le composant
 onMounted(() => {
   fetchConversations();
 });
 
-// Se désabonner des sockets lors de la destruction du composant
 onUnmounted(() => {
   socket.off('sendNewMessageNotification');
 });
 </script>
 
-<style>
-/* Styles spécifiques à la page de messagerie */
-</style>

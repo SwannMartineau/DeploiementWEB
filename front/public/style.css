@@ -275,17 +275,6 @@ p {
   margin-right: 1rem;
 }
 
-.conversation-messages {
-  height: 53vh;
-
-  width: 30%;
-  flex: 1;
-  border: 1px solid #fffefe38;
-  border-radius: 4px;
-  padding: 1rem;
-  background-color: #a46fcba8;
-}
-
 
 h2, h3 {
   color: #dcbaf5;
@@ -310,29 +299,40 @@ padding: 3em;
 width: 400px;
 }
 
+.conversation-messages {
+  height: 53vh;
+  width: 30%;
+  flex: 2;
+  border: 1px solid #fffefe38;
+  border-radius: 4px;
+  padding: 1rem;
+  background-color: #a46fcba8;
+}
+
 .message-sent {
   background-color: #b98eda;
   color: white;
-  text-align: right;
   padding: 10px;
   border-radius: 10px;
   margin: 5px 0;
   border: solid 1px #ffffff66;
   width: fit-content;
   margin-top: 0.5em;
+  align-self: flex-end; /* Aligne le message à droite */
 }
 
 .message-received {
   background-color: #f0f0f0;
-  width: fit-content;
   color: #39004b;
-  text-align: left;
   padding: 10px;
   border-radius: 10px;
   margin: 5px 0;
   border: solid 1px #00000000;
+  width: fit-content;
   margin-top: 0.5em;
+  align-self: flex-start; /* Aligne le message à gauche */
 }
+
 
 
 .modal {
@@ -378,6 +378,8 @@ width: 400px;
   overflow: scroll;
   padding: 1em;
   width: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden; /* Hide horizontal scrollbar */
 
 }
